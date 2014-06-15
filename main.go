@@ -9,10 +9,10 @@ import (
 func main() {
 	m := martini.Classic()
 
-	m.Use(martini.Static("assets"))
+	m.Use(martini.Static("public"))
 	m.Use(render.Renderer())
 
-	m.Group("/expenses", func(r martini.Router) {
+	m.Group("/api/expenses", func(r martini.Router) {
 		r.Get("", handlers.GetExpenses)
 		r.Get("/report", handlers.ExpensesReport)
 	})
