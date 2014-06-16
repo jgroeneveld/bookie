@@ -14,6 +14,7 @@ func main() {
 
 	m.Group("/api/expenses", func(r martini.Router) {
 		r.Get("", handlers.GetExpenses)
+		r.Post("", handlers.CreateExpense)
 		r.Get("/report", handlers.ExpensesReport)
 	})
 

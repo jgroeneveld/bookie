@@ -1,9 +1,8 @@
 (function() {
   var app = angular.module("bookie");
 
-  app.controller("ExpensesController", function($scope, $http) {
-    $http.get("/api/expenses").then(function(response) {
-      var expenses = response.data;
+  app.controller("ExpensesController", function($scope, ApiClient) {
+    ApiClient.getExpenses().then(function(expenses) {
       $scope.expenses = expenses;
     });
   });

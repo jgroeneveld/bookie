@@ -17,6 +17,10 @@ func GetExpenses(render render.Render) {
 	render.JSON(200, expenses)
 }
 
+func CreateExpense() string {
+	return "Alles ut junge"
+}
+
 func dateFromString(s string) time.Time {
 	layout := "2006-01-02"
 

@@ -1,0 +1,40 @@
+<a data-ng-href="#/">Ausgaben</a>
+
+<hr>
+
+<form class='form-horizontal' role='form' accept-charset="utf-8">
+
+  <div class="form-group">
+    <label for="Date" class='col-xs-4 control-label'>Datum</label>
+    <div class="col-xs-8">
+      <input type="date" name="Date" id="Date" data-ng-model="expense.Date" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="Amount" class='col-xs-4 control-label'>Ausgabe</label>
+    <div class="col-xs-8">
+      <input type="tel" name="Amount" id="Amount" data-ng-model="expense.Amount" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="Category" class='col-xs-4 control-label'>Kategorie</label>
+    <div class="col-xs-8">
+      <select data-ng-model='expense.Category' data-ng-options='category for category in Categories' />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="User" class='col-xs-4 control-label'>Wer</label>
+    <div class="col-xs-8">
+      <select data-ng-model='expense.User' data-ng-options='user for user in Users' />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-xs-offset-4 col-xs-8">
+      <button data-ng-click="Submit()" type='submit' class='btn btn-default'>Continue →</button>
+    </div>
+  </div>
+</form>
