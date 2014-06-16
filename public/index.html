@@ -22,24 +22,9 @@
 
   <div class="container">
 
-    <div data-ng-controller="ExpensesController">
-      <table class='table table-condensed'>
-        <tr>
-          <th>Datum</th>
-          <th>Ausgabe</th>
-          <th>Kategorie</th>
-          <th>Wer</th>
-        </tr>
-        <tr data-ng-repeat="expense in expenses">
-          <td>{{expense.CreatedAt | date : 'dd.MM.yy'}}</td>
-          <td>{{ expense.Amount }}€</td>
-          <td>{{ expense.Category }}</td>
-          <td>{{ expense.User }}</td>
-        </tr>
-      </table>
-    </div>
-  
-</div>
+    <ng-view></ng-view>
+
+  </div>
 
 </body>
 </html>
