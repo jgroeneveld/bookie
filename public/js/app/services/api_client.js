@@ -12,7 +12,11 @@
       },
 
       createExpense: function(expense) {
-        return $http.post("/api/expenses").then(function(response) {
+        return $http({
+          method: 'post',
+          url: '/api/expenses',
+          params: expense,
+        }).then(function(response) {
           console.log(response);
         });
       },

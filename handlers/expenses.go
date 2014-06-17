@@ -5,9 +5,14 @@ import (
 	"database/sql"
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/jgroeneveld/bookie/db"
+	"github.com/jgroeneveld/bookie/entities"
+	"github.com/jgroeneveld/util"
 )
 
 type ExpensesHandler struct {
@@ -20,8 +25,30 @@ func (handler *ExpensesHandler) GetExpenses(resp http.ResponseWriter, req *http.
 }
 
 func (handler *ExpensesHandler) CreateExpense(resp http.ResponseWriter, req *http.Request) {
+	params := req.URL.Query()
+
+	amountFloat, err := strconv.ParseFloat(params.Get("Amount"), 32)
+	util.PanicIf(err)
+
+	expense := entities.Expense{
+		User:      entities.User(params.Get("User")),
+		Category:  entities.Category(params.Get("Category")),
+		Amount:    entities.Money(amountFloat),
+		CreatedAt: dateFromString(params.Get("Date")),
+	}
+
+	log.Println(params)
+	log.Println(expense)
 	// TODO implement
 	renderJSON(201, "", resp)
+}
+
+func dateFromString(s string) time.Time {
+	layout := "2006-01-02"
+
+	d, _ := time.Parse(layout, s)
+
+	return d
 }
 
 func renderJSON(status int, obj interface{}, resp http.ResponseWriter) {

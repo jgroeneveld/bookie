@@ -13,7 +13,7 @@
     $scope.Users = ["Hilke", "Jaap"];
 
     $scope.Submit = function() {
-      ApiClient.createExpense($scope.Expense).then(function() {
+      ApiClient.createExpense($scope.expense).then(function() {
         $location.path("/");
       });
     };

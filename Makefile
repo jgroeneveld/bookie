@@ -14,4 +14,4 @@ format:
 	goimports -w .
 
 run:
-	DATABASE_URL=postgres://jgroeneveld@localhost/bookie?sslmode=disable go run main.go
+	PORT=3000 DATABASE_URL=postgres://jgroeneveld@localhost/bookie?sslmode=disable go run main.go
