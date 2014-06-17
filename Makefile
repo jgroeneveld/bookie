@@ -12,3 +12,6 @@ test:
 
 format:
 	goimports -w .
+
+run:
+	DATABASE_URL=postgres://jgroeneveld@localhost/bookie?sslmode=disable go run main.go

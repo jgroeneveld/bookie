@@ -1,7 +1,7 @@
 create table if not exists expenses(
-  id serial PRIMARY KEY NOT NULL,
+  id serial primary key not null,
   username varchar (50),
   category varchar (50),
   amount int,
-  created_at timestamp not null
+  created_at timestamp not null default now()
 );

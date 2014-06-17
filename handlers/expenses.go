@@ -1,50 +1,64 @@
 package handlers
 
 import (
-	"time"
+	"bytes"
+	"database/sql"
+	"encoding/json"
+	"io"
+	"net/http"
 
-	"github.com/jgroeneveld/bookie/entities"
-	"github.com/martini-contrib/render"
+	"github.com/jgroeneveld/bookie/db"
 )
 
-func GetExpenses(render render.Render) {
-	expenses := []entities.Expense{
-		{Category: "Edeka", Amount: 18.23, CreatedAt: dateFromString("2014-05-12"), User: "Hilke"},
-		{Category: "Lidl", Amount: 5.19, CreatedAt: dateFromString("2014-05-17"), User: "Hilke"},
-		{Category: "Edeka", Amount: 14.85, CreatedAt: dateFromString("2014-06-02"), User: "Jaap"},
-		{Category: "Edeka", Amount: 22.42, CreatedAt: dateFromString("2014-06-07"), User: "Hilke"},
+type ExpensesHandler struct {
+	DB *sql.DB
+}
+
+func (handler *ExpensesHandler) GetExpenses(resp http.ResponseWriter, req *http.Request) {
+	expenses := db.GetExpenses(handler.DB)
+	renderJSON(200, expenses, resp)
+}
+
+func (handler *ExpensesHandler) CreateExpense(resp http.ResponseWriter, req *http.Request) {
+	// TODO implement
+	renderJSON(201, "", resp)
+}
+
+func renderJSON(status int, obj interface{}, resp http.ResponseWriter) {
+	var result []byte
+	var err error
+
+	result, err = json.Marshal(obj)
+	if err != nil {
+		http.Error(resp, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	render.JSON(200, expenses)
-}
 
-func CreateExpense() string {
-	return "Alles ut junge"
-}
+	resp.Header().Set("Content-Type", "application/json")
+	resp.WriteHeader(status)
 
-func dateFromString(s string) time.Time {
-	layout := "2006-01-02"
-
-	d, _ := time.Parse(layout, s)
-
-	return d
-}
-
-func ExpensesReport(render render.Render) {
-	report := entities.ExpensesReport{
-		MonthlyReports: []entities.MonthlyReport{
-			{
-				Month:       "2014-05",
-				TotalAmount: 22.23,
-				AmountByUsers: entities.UserMoneyMap{
-					"Jaap":  12.23,
-					"Hilke": 10.00,
-				},
-				AmountByCategory: entities.CategoryMoneyMap{
-					"Edeka": 12.23,
-					"Lidl":  10.00,
-				},
-			},
-		},
+	if _, err = io.Copy(resp, bytes.NewBuffer(result)); err != nil {
+		http.Error(resp, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	render.JSON(200, report)
 }
+
+// func ExpensesReport(render render.Render) {
+// 	report := entities.ExpensesReport{
+// 		MonthlyReports: []entities.MonthlyReport{
+// 			{
+// 				Month:       "2014-05",
+// 				TotalAmount: 22.23,
+// 				AmountByUsers: entities.UserMoneyMap{
+// 					"Jaap":  12.23,
+// 					"Hilke": 10.00,
+// 				},
+// 				AmountByCategory: entities.CategoryMoneyMap{
+// 					"Edeka": 12.23,
+// 					"Lidl":  10.00,
+// 				},
+// 			},
+// 		},
+// 	}
+// 	render.JSON(200, report)
+// }

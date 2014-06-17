@@ -1,22 +1,27 @@
 package main
 
 import (
-	"github.com/go-martini/martini"
+	"net/http"
+	"os"
+
+	"github.com/gorilla/mux"
+	"github.com/jgroeneveld/bookie/db"
 	"github.com/jgroeneveld/bookie/handlers"
-	"github.com/martini-contrib/render"
 )
 
 func main() {
-	m := martini.Classic()
+	dbConnection := db.OpenDb()
+	defer dbConnection.Close()
 
-	m.Use(martini.Static("public"))
-	m.Use(render.Renderer())
+	router := mux.NewRouter()
+	expensesHandler := handlers.ExpensesHandler{DB: dbConnection}
 
-	m.Group("/api/expenses", func(r martini.Router) {
-		r.Get("", handlers.GetExpenses)
-		r.Post("", handlers.CreateExpense)
-		r.Get("/report", handlers.ExpensesReport)
-	})
+	apiRouter := router.PathPrefix("/api").Subrouter()
+	apiRouter.Path("/expenses").Methods("GET").HandlerFunc(expensesHandler.GetExpenses)
+	apiRouter.Path("/expenses").Methods("POST").HandlerFunc(expensesHandler.CreateExpense)
 
-	m.Run()
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
+
+	http.Handle("/", router)
+	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }
