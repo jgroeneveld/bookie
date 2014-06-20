@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"os"
 
@@ -10,6 +11,11 @@ import (
 )
 
 func main() {
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		log.Fatal("PORT missing")
+	}
+
 	dbConnection := db.OpenDb()
 	defer dbConnection.Close()
 
@@ -22,6 +28,15 @@ func main() {
 
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
 
-	http.Handle("/", router)
-	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	log.Printf("Serving on %s", port)
+	http.ListenAndServe(":"+port, &LoggingHandler{Handler: router})
+}
+
+type LoggingHandler struct {
+	Handler http.Handler
+}
+
+func (handler *LoggingHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
+	log.Printf("%s %s", req.Method, req.URL)
+	handler.Handler.ServeHTTP(resp, req)
 }

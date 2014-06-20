@@ -39,7 +39,9 @@ func (handler *ExpensesHandler) CreateExpense(resp http.ResponseWriter, req *htt
 
 	log.Println(params)
 	log.Println(expense)
-	// TODO implement
+
+	db.InsertExpense(handler.DB, expense)
+
 	renderJSON(201, "", resp)
 }
 

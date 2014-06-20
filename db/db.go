@@ -2,6 +2,8 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -12,6 +14,10 @@ import (
 
 func OpenDb() *sql.DB {
 	url := os.Getenv("DATABASE_URL")
+	if len(url) == 0 {
+		log.Fatal("DATABASE_URL missing")
+	}
+
 	db, err := sql.Open("postgres", url)
 	util.PanicIf(err)
 
@@ -46,4 +52,15 @@ func GetExpenses(db *sql.DB) []entities.Expense {
 	}
 
 	return expenses
+}
+
+func InsertExpense(db *sql.DB, expense entities.Expense) error {
+	result, err := db.Exec(fmt.Sprintf("insert into expenses " +
+		"(username, category, amount, created_at)" +
+		" VALUES " +
+		"('%s', '%s', %f, now())", expense.User, expense.Category, expense.Amount))
+
+	log.Println("result", result)
+	log.Println("err", err)
+	return nil
 }
