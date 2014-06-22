@@ -31,10 +31,10 @@ func (handler *ExpensesHandler) CreateExpense(resp http.ResponseWriter, req *htt
 	util.PanicIf(err)
 
 	expense := entities.Expense{
-		User:      entities.User(params.Get("User")),
-		Category:  entities.Category(params.Get("Category")),
-		Amount:    entities.Money(amountFloat),
-		CreatedAt: dateFromString(params.Get("Date")),
+		User:     entities.User(params.Get("User")),
+		Category: entities.Category(params.Get("Category")),
+		Amount:   entities.Money(amountFloat),
+		SpentAt:  dateFromString(params.Get("Date")),
 	}
 
 	log.Println(params)

@@ -1,4 +1,8 @@
-<a data-ng-href="#/expenses/new">Eintragen</a><br><br>
+<div class="row">
+  <div class='col-xs-12'>
+    <a data-ng-href="#/expenses/new" class='btn btn-default fullwidth'>Eintragen</a><br><br>
+  </div>
+</div>
 
 <table class='table table-condensed'>
   <tr>
@@ -8,7 +12,7 @@
     <th>Wer</th>
   </tr>
   <tr data-ng-repeat="expense in expenses">
-    <td>{{ expense.CreatedAt | date : 'dd.MM.yy' }}</td>
+    <td>{{ expense.SpentAt | date : 'dd.MM.yy' }}</td>
     <td>{{ expense.Amount }}€</td>
     <td>{{ expense.Category }}</td>
     <td>{{ expense.User }}</td>

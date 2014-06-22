@@ -1,4 +1,8 @@
-<a data-ng-href="#/">Ausgaben</a>
+<div class="row">
+  <div class='col-xs-12'>
+    <a data-ng-href="#/" class='btn btn-default fullwidth'>Ausgaben</a>
+  </div>
+</div>
 
 <hr>
 
@@ -26,15 +30,11 @@
   </div>
 
   <div class="form-group">
-    <label for="User" class='col-xs-4 control-label'>Wer</label>
-    <div class="col-xs-8">
-      <select data-ng-model='expense.User' data-ng-options='user for user in Users' />
+    <div class="col-xs-6">
+      <button data-ng-click="Submit('Hilke')" type='submit' data-ng-disabled="form.$invalid" class='btn btn-primary' style='width: 100%'>Hilke →</button>
     </div>
-  </div>
-
-  <div class="form-group">
-    <div class="col-xs-offset-4 col-xs-8">
-      <button data-ng-click="Submit()" type='submit' data-ng-disabled="form.$invalid" class='btn btn-default'>Continue →</button>
+    <div class="col-xs-6">
+      <button data-ng-click="Submit('Jaap')" type='submit' data-ng-disabled="form.$invalid" class='btn btn-primary' style='width: 100%'>Jaap →</button>
     </div>
   </div>
 </form>

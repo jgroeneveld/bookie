@@ -1,6 +1,6 @@
 default: install
 
-package = github.com/jgroeneveld/wtrack
+package = github.com/jgroeneveld/bookie
 
 .PHONY: default install
 

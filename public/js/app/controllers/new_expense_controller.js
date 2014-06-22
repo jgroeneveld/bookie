@@ -5,14 +5,13 @@
     $scope.expense = {
       Date: dateToYMD(new Date(Date.now())),
       Amount: "",
-      Category: "Edeka",
-      User: "Hilke",
+      Category: "Edeka"
     };
 
-    $scope.Categories = ["Edeka", "Lidl"];
-    $scope.Users = ["Hilke", "Jaap"];
+    $scope.Categories = ["Sonstiges", "Edeka", "Lidl"];
 
-    $scope.Submit = function() {
+    $scope.Submit = function(user) {
+      $scope.expense.User = user;
       ApiClient.createExpense($scope.expense).then(function() {
         $location.path("/");
       });
