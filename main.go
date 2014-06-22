@@ -24,6 +24,7 @@ func main() {
 
 	apiRouter := router.PathPrefix("/api").Subrouter()
 	apiRouter.Path("/expenses").Methods("GET").HandlerFunc(expensesHandler.GetExpenses)
+	apiRouter.Path("/expenses/report").Methods("GET").HandlerFunc(expensesHandler.GetExpensesReport)
 	apiRouter.Path("/expenses").Methods("POST").HandlerFunc(expensesHandler.CreateExpense)
 
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))

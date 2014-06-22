@@ -30,7 +30,7 @@ func GetExpenses(db *sql.DB) []entities.Expense {
 	rows, err := db.Query("select " +
 		"category, amount, created_at, spent_at, username " +
 		"from expenses " +
-		"order by spent_at desc limit 1000")
+		"order by spent_at desc, id desc limit 1000")
 	util.PanicIf(err)
 	defer rows.Close()
 
@@ -55,8 +55,7 @@ func GetExpenses(db *sql.DB) []entities.Expense {
 
 		expenses = append(expenses, expense)
 	}
-
-	return expenses
+return expenses
 }
 
 func InsertExpense(db *sql.DB, expense entities.Expense) error {
@@ -72,4 +71,37 @@ func InsertExpense(db *sql.DB, expense entities.Expense) error {
 	log.Println("result", result)
 	log.Println("err", err)
 	return nil
+}
+
+func GetExpensesReport(db *sql.DB) entities.ExpensesReport {
+	report := entities.ExpensesReport{
+		AmountByUsers: entities.UserMoneyMap{
+			"Jaap": GetTotalAmountForUser(db, "Jaap"),
+			"Hilke": GetTotalAmountForUser(db, "Hilke"),
+		},
+		MonthlyReports: []entities.MonthlyReport{
+			// {
+				// Month:       "2014-05",
+				// TotalAmount: 22.23,
+				// AmountByUsers: entities.UserMoneyMap{
+				// 	"Jaap":  12.23,
+				// 	"Hilke": 10.00,
+				// },
+				// AmountByCategory: entities.CategoryMoneyMap{
+				// 	"Edeka": 12.23,
+				// 	"Lidl":  10.00,
+				// },
+			// },
+		},
+	}
+
+	return report
+}
+
+func GetTotalAmountForUser(db *sql.DB, user entities.User) entities.Money {
+	username := string(user)
+	row := db.QueryRow(fmt.Sprintf("select sum(amount) from expenses where username = '%s'", username))
+	var amount float32
+	row.Scan(&amount)
+	return entities.Money(amount)
 }

@@ -5,10 +5,10 @@
     $scope.expense = {
       Date: dateToYMD(new Date(Date.now())),
       Amount: "",
-      Category: "Edeka"
+      Category: "Sonstiges",
     };
 
-    $scope.Categories = ["Sonstiges", "Edeka", "Lidl"];
+    $scope.Categories = ["Sonstiges", "Edeka", "Lidl", "Penny", "Drogerie", "Markt"];
 
     $scope.Submit = function(user) {
       $scope.expense.User = user;

@@ -45,6 +45,12 @@ func (handler *ExpensesHandler) CreateExpense(resp http.ResponseWriter, req *htt
 	renderJSON(201, "", resp)
 }
 
+func (handler *ExpensesHandler) GetExpensesReport(resp http.ResponseWriter, req *http.Request) {
+	report := db.GetExpensesReport(handler.DB)
+
+	renderJSON(200, report, resp)
+}
+
 func dateFromString(s string) time.Time {
 	layout := "2006-01-02"
 
@@ -72,22 +78,3 @@ func renderJSON(status int, obj interface{}, resp http.ResponseWriter) {
 	}
 }
 
-// func ExpensesReport(render render.Render) {
-// 	report := entities.ExpensesReport{
-// 		MonthlyReports: []entities.MonthlyReport{
-// 			{
-// 				Month:       "2014-05",
-// 				TotalAmount: 22.23,
-// 				AmountByUsers: entities.UserMoneyMap{
-// 					"Jaap":  12.23,
-// 					"Hilke": 10.00,
-// 				},
-// 				AmountByCategory: entities.CategoryMoneyMap{
-// 					"Edeka": 12.23,
-// 					"Lidl":  10.00,
-// 				},
-// 			},
-// 		},
-// 	}
-// 	render.JSON(200, report)
-// }
