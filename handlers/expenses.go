@@ -12,7 +12,6 @@ import (
 
 	"github.com/jgroeneveld/bookie/db"
 	"github.com/jgroeneveld/bookie/entities"
-	"github.com/jgroeneveld/util"
 )
 
 type ExpensesHandler struct {
@@ -20,35 +19,50 @@ type ExpensesHandler struct {
 }
 
 func (handler *ExpensesHandler) GetExpenses(resp http.ResponseWriter, req *http.Request) {
-	expenses := db.GetExpenses(handler.DB)
-	renderJSON(200, expenses, resp)
+	err, expenses := db.GetExpenses(handler.DB)
+	if err != nil {
+		renderInternalError(resp, err)
+	} else {
+		renderJSON(resp, 200, expenses)
+	}
 }
 
 func (handler *ExpensesHandler) CreateExpense(resp http.ResponseWriter, req *http.Request) {
 	params := req.URL.Query()
 
-	amountFloat, err := strconv.ParseFloat(params.Get("Amount"), 32)
-	util.PanicIf(err)
+	amount, err := strconv.Atoi(params.Get("Amount"))
+	if err != nil {
+		http.Error(resp, "Amount invalid", http.StatusBadRequest)
+		return
+	}
 
 	expense := entities.Expense{
 		User:     entities.User(params.Get("User")),
 		Category: entities.Category(params.Get("Category")),
-		Amount:   entities.Money(amountFloat),
+		Amount:   entities.Money(amount),
 		SpentAt:  dateFromString(params.Get("Date")),
 	}
 
 	log.Println(params)
 	log.Println(expense)
 
-	db.InsertExpense(handler.DB, expense)
+	err = db.InsertExpense(handler.DB, expense)
 
-	renderJSON(201, "", resp)
+	if err != nil {
+		renderInternalError(resp, err)
+	} else {
+		renderJSON(resp, 201, expense)
+	}
 }
 
 func (handler *ExpensesHandler) GetExpensesReport(resp http.ResponseWriter, req *http.Request) {
-	report := db.GetExpensesReport(handler.DB)
+	err, report := db.GetExpensesReport(handler.DB)
 
-	renderJSON(200, report, resp)
+	if err != nil {
+		renderInternalError(resp, err)
+	} else {
+		renderJSON(resp, 200, report)
+	}
 }
 
 func dateFromString(s string) time.Time {
@@ -59,13 +73,17 @@ func dateFromString(s string) time.Time {
 	return d
 }
 
-func renderJSON(status int, obj interface{}, resp http.ResponseWriter) {
+func renderInternalError(resp http.ResponseWriter, err error) {
+	http.Error(resp, err.Error(), http.StatusInternalServerError)
+}
+
+func renderJSON(resp http.ResponseWriter, status int, obj interface{}) {
 	var result []byte
 	var err error
 
 	result, err = json.Marshal(obj)
 	if err != nil {
-		http.Error(resp, err.Error(), http.StatusInternalServerError)
+		renderInternalError(resp, err)
 		return
 	}
 
@@ -73,8 +91,7 @@ func renderJSON(status int, obj interface{}, resp http.ResponseWriter) {
 	resp.WriteHeader(status)
 
 	if _, err = io.Copy(resp, bytes.NewBuffer(result)); err != nil {
-		http.Error(resp, err.Error(), http.StatusInternalServerError)
+		renderInternalError(resp, err)
 		return
 	}
 }
-

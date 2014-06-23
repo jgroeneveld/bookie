@@ -33,15 +33,18 @@ func Migrate(db *sql.DB) {
 	util.PanicIf(err)
 }
 
-func GetExpenses(db *sql.DB) []entities.Expense {
+func GetExpenses(db *sql.DB) (error, []entities.Expense) {
 	expenses := []entities.Expense{}
 
 	rows, err := db.Query("select " +
 		"category, amount, created_at, spent_at, username " +
 		"from expenses " +
 		"order by spent_at desc, id desc limit 1000")
-	util.PanicIf(err)
 	defer rows.Close()
+
+	if err != nil {
+		return err, nil
+	}
 
 	for rows.Next() {
 		var category string
@@ -51,7 +54,7 @@ func GetExpenses(db *sql.DB) []entities.Expense {
 		var user string
 
 		if err = rows.Scan(&category, &amount, &createdAt, &spentAt, &user); err != nil {
-			util.PanicIf(err)
+			return err, nil
 		}
 
 		expense := entities.Expense{
@@ -64,7 +67,8 @@ func GetExpenses(db *sql.DB) []entities.Expense {
 
 		expenses = append(expenses, expense)
 	}
-	return expenses
+
+	return nil, expenses
 }
 
 func InsertExpense(db *sql.DB, expense entities.Expense) error {
@@ -79,10 +83,10 @@ func InsertExpense(db *sql.DB, expense entities.Expense) error {
 
 	log.Println("result", result)
 	log.Println("err", err)
-	return nil
+	return err
 }
 
-func GetExpensesReport(db *sql.DB) entities.ExpensesReport {
+func GetExpensesReport(db *sql.DB) (error, entities.ExpensesReport) {
 	report := entities.ExpensesReport{
 		AmountByUsers: entities.UserMoneyMap{
 			"Jaap":  GetTotalAmountForUser(db, "Jaap"),
@@ -104,7 +108,7 @@ func GetExpensesReport(db *sql.DB) entities.ExpensesReport {
 		},
 	}
 
-	return report
+	return nil, report
 }
 
 func GetTotalAmountForUser(db *sql.DB, user entities.User) entities.Money {
