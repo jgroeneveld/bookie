@@ -1,6 +1,6 @@
 package entities
 
-type Money float32
+type Money int
 type Category string
 type User string
 type Month string

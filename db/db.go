@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -72,11 +71,11 @@ func InsertExpense(db *sql.DB, expense entities.Expense) error {
 	spentAt := expense.SpentAt.Format("2006-01-02")
 	log.Println("spentAt", spentAt)
 
-	result, err := db.Exec(fmt.Sprintf("insert into expenses "+
+	result, err := db.Exec("insert into expenses "+
 		"(username, category, amount, spent_at)"+
 		" VALUES "+
-		"('%s', '%s', %f, '%s')",
-		expense.User, expense.Category, expense.Amount, spentAt))
+		"($1, $2, $3, $4)",
+		string(expense.User), string(expense.Category), int(expense.Amount), spentAt)
 
 	log.Println("result", result)
 	log.Println("err", err)
@@ -110,7 +109,7 @@ func GetExpensesReport(db *sql.DB) entities.ExpensesReport {
 
 func GetTotalAmountForUser(db *sql.DB, user entities.User) entities.Money {
 	username := string(user)
-	row := db.QueryRow(fmt.Sprintf("select sum(amount) from expenses where username = '%s'", username))
+	row := db.QueryRow("select sum(amount) from expenses where username = $1", username)
 	var amount float32
 	row.Scan(&amount)
 	return entities.Money(amount)
