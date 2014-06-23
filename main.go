@@ -18,6 +18,7 @@ func main() {
 
 	dbConnection := db.OpenDb()
 	defer dbConnection.Close()
+	db.Migrate(dbConnection)
 
 	router := mux.NewRouter()
 	expensesHandler := handlers.ExpensesHandler{DB: dbConnection}

@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"time"
@@ -22,6 +23,15 @@ func OpenDb() *sql.DB {
 	util.PanicIf(err)
 
 	return db
+}
+
+func Migrate(db *sql.DB) {
+	buffer, err := ioutil.ReadFile("schema.sql")
+	util.PanicIf(err)
+	schema := string(buffer)
+
+	_, err = db.Exec(schema)
+	util.PanicIf(err)
 }
 
 func GetExpenses(db *sql.DB) []entities.Expense {
@@ -55,7 +65,7 @@ func GetExpenses(db *sql.DB) []entities.Expense {
 
 		expenses = append(expenses, expense)
 	}
-return expenses
+	return expenses
 }
 
 func InsertExpense(db *sql.DB, expense entities.Expense) error {
@@ -76,22 +86,22 @@ func InsertExpense(db *sql.DB, expense entities.Expense) error {
 func GetExpensesReport(db *sql.DB) entities.ExpensesReport {
 	report := entities.ExpensesReport{
 		AmountByUsers: entities.UserMoneyMap{
-			"Jaap": GetTotalAmountForUser(db, "Jaap"),
+			"Jaap":  GetTotalAmountForUser(db, "Jaap"),
 			"Hilke": GetTotalAmountForUser(db, "Hilke"),
 		},
 		MonthlyReports: []entities.MonthlyReport{
-			// {
-				// Month:       "2014-05",
-				// TotalAmount: 22.23,
-				// AmountByUsers: entities.UserMoneyMap{
-				// 	"Jaap":  12.23,
-				// 	"Hilke": 10.00,
-				// },
-				// AmountByCategory: entities.CategoryMoneyMap{
-				// 	"Edeka": 12.23,
-				// 	"Lidl":  10.00,
-				// },
-			// },
+		// {
+		// Month:       "2014-05",
+		// TotalAmount: 22.23,
+		// AmountByUsers: entities.UserMoneyMap{
+		// 	"Jaap":  12.23,
+		// 	"Hilke": 10.00,
+		// },
+		// AmountByCategory: entities.CategoryMoneyMap{
+		// 	"Edeka": 12.23,
+		// 	"Lidl":  10.00,
+		// },
+		// },
 		},
 	}
 

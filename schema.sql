@@ -7,5 +7,3 @@ create table if not exists expenses(
   created_at timestamp not null default now()
 );
 
-# seed data
-insert into expenses (username, category, amount, created_at) VALUES ('Jaap', 'Edeka', 12.20, now());
