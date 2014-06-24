@@ -5,3 +5,11 @@
 .fullwidth {
   width: 100%;
 }
+
+table.expenses tr th {
+  width: 25%;
+}
+
+table.expenses tr td {
+  width: 25%;
+}
