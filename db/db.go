@@ -92,20 +92,7 @@ func GetExpensesReport(db *sql.DB) (error, entities.ExpensesReport) {
 			"Jaap":  GetTotalAmountForUser(db, "Jaap"),
 			"Hilke": GetTotalAmountForUser(db, "Hilke"),
 		},
-		MonthlyReports: []entities.MonthlyReport{
-		// {
-		// Month:       "2014-05",
-		// TotalAmount: 22.23,
-		// AmountByUsers: entities.UserMoneyMap{
-		// 	"Jaap":  12.23,
-		// 	"Hilke": 10.00,
-		// },
-		// AmountByCategory: entities.CategoryMoneyMap{
-		// 	"Edeka": 12.23,
-		// 	"Lidl":  10.00,
-		// },
-		// },
-		},
+		MonthlyReports: []entities.MonthlyReport{},
 	}
 
 	return nil, report

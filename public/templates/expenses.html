@@ -4,6 +4,10 @@
   </div>
 </div>
 
+<div class='report' data-ng-controller='TotalAmountController'>
+  {{ biggestSpender.User }} ist um {{ biggestSpender.Amount - lesserSpender.Amount }}€ voraus.
+</div>
+
 <table class='expenses table table-condensed'>
   <tr>
     <th>Datum</th>

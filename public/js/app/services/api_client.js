@@ -11,6 +11,13 @@
         });
       },
 
+      getReport: function() {
+        return $http.get("/api/expenses/report").then(function(response) {
+          var report = response.data;
+          return report;
+        });
+      },
+
       createExpense: function(expense) {
         return $http({
           method: 'post',
