@@ -5,7 +5,9 @@
 </div>
 
 <div class='report' data-ng-controller='TotalAmountController'>
-  {{ biggestSpender.User }} ist um {{ biggestSpender.Amount - lesserSpender.Amount }}€ voraus.
+  <div class='fade-in' data-ng-show='biggestSpender'>
+    {{ biggestSpender.User }} ist um {{ biggestSpender.Amount - lesserSpender.Amount }}€ voraus.
+  </div>
 </div>
 
 <table class='expenses table table-condensed'>
@@ -18,7 +20,7 @@
   <tr data-ng-if='!expenses'>
     <td colspan='4'>Loading</td>
   </tr>
-  <tr data-ng-repeat="expense in expenses">
+  <tr class='fade-in' data-ng-repeat="expense in expenses">
     <td>{{ expense.SpentAt | date : 'dd.MM.yy' }}</td>
     <td>{{ expense.Amount }}€</td>
     <td>{{ expense.Category }}</td>
