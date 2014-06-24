@@ -12,7 +12,7 @@
 		},
 		{
 			"ImportPath": "github.com/jgroeneveld/util",
-			"Rev": "7aa4a32e63929015dc959689b3440e337a2a5911"
+			"Rev": "9fad3bf93377f135d23208ea7d9d8c413f1d616e"
 		},
 		{
 			"ImportPath": "github.com/lib/pq",
