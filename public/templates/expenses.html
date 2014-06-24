@@ -17,9 +17,6 @@
     <th>Kategorie</th>
     <th>Wer</th>
   </tr>
-  <tr data-ng-if='!expenses'>
-    <td colspan='4'>Loading</td>
-  </tr>
   <tr class='fade-in' data-ng-repeat="expense in expenses">
     <td>{{ expense.SpentAt | date : 'dd.MM.yy' }}</td>
     <td>{{ expense.Amount }}€</td>
