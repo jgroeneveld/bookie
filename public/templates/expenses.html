@@ -6,10 +6,13 @@
 
 <table class='table table-condensed'>
   <tr>
-    <th>Datum</th>
+    <th style='width: 25%'>Datum</th>
     <th>Ausgabe</th>
     <th>Kategorie</th>
     <th>Wer</th>
+  </tr>
+  <tr data-ng-if='!expenses'>
+    <td colspan='4'>Loading</td>
   </tr>
   <tr data-ng-repeat="expense in expenses">
     <td>{{ expense.SpentAt | date : 'dd.MM.yy' }}</td>
