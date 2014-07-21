@@ -5,7 +5,7 @@
     $scope.expense = {
       Date: dateToYMD(new Date(Date.now())),
       Amount: "",
-      Category: "Sonstiges",
+      Category: "Edeka",
     };
 
     $scope.Categories = ["Edeka", "Lidl", "Bäcker", "Sonstiges", "Penny", "Drogerie", "Markt"];
