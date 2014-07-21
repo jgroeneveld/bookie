@@ -8,7 +8,7 @@
       Category: "Sonstiges",
     };
 
-    $scope.Categories = ["Sonstiges", "Edeka", "Lidl", "Penny", "Drogerie", "Markt"];
+    $scope.Categories = ["Edeka", "Lidl", "Bäcker", "Sonstiges", "Penny", "Drogerie", "Markt"];
 
     $scope.Submit = function(user) {
       $scope.expense.User = user;
