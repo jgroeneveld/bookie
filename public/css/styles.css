@@ -12,6 +12,11 @@
   width: 100%;
 }
 
+table.expenses tbody tr:hover {
+  background-color: #cceeff;
+  cursor: pointer;
+}
+
 table.expenses tr th {
   width: 25%;
 }

@@ -24,6 +24,7 @@ func main() {
 	expensesHandler := handlers.ExpensesHandler{DB: dbConnection}
 
 	apiRouter := router.PathPrefix("/api").Subrouter()
+	apiRouter.Path("/expenses/{id:[0-9]+}").Methods("GET").HandlerFunc(expensesHandler.GetExpense)
 	apiRouter.Path("/expenses").Methods("GET").HandlerFunc(expensesHandler.GetExpenses)
 	apiRouter.Path("/expenses/report").Methods("GET").HandlerFunc(expensesHandler.GetExpensesReport)
 	apiRouter.Path("/expenses").Methods("POST").HandlerFunc(expensesHandler.CreateExpense)

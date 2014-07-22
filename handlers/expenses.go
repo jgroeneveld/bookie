@@ -10,12 +10,28 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/jgroeneveld/bookie/db"
 	"github.com/jgroeneveld/bookie/entities"
+	"github.com/jgroeneveld/util"
 )
 
 type ExpensesHandler struct {
 	DB *sql.DB
+}
+
+func (handler *ExpensesHandler) GetExpense(resp http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	idStr := vars["id"]
+	id, err := strconv.Atoi(idStr)
+	util.PanicIf(err)
+
+	err, expenses := db.GetExpense(handler.DB, id)
+	if err != nil {
+		renderInternalError(resp, err)
+	} else {
+		renderJSON(resp, 200, expenses)
+	}
 }
 
 func (handler *ExpensesHandler) GetExpenses(resp http.ResponseWriter, req *http.Request) {

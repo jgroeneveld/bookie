@@ -4,6 +4,13 @@
   app.factory("ApiClient", function($http) {
     return {
 
+      getExpense: function(id) {
+        return $http.get("/api/expenses/" + id).then(function(response) {
+          var expense = response.data;
+          return expense;
+        });
+      },
+
       getExpenses: function() {
         return $http.get("/api/expenses").then(function(response) {
           var expenses = response.data;

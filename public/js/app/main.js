@@ -9,6 +9,11 @@
       controller: 'NewExpenseController',
     });
 
+    $routeProvider.when("/expenses/:id", {
+      templateUrl: '/templates/show_expense.html',
+      controller: 'ShowExpenseController',
+    });
+
     $routeProvider.otherwise({
       templateUrl: '/templates/expenses.html',
       controller: 'ExpensesController',

@@ -33,11 +33,42 @@ func Migrate(db *sql.DB) {
 	util.PanicIf(err)
 }
 
+func GetExpense(db *sql.DB, id int) (error, *entities.Expense) {
+	query := "select " +
+		"category, amount, created_at, spent_at, username " +
+		"from expenses " +
+		"where id = $1 " +
+		"limit 1"
+ 
+	row := db.QueryRow(query, id)
+
+	var category string
+	var amount float32
+	var createdAt time.Time
+	var spentAt time.Time
+	var user string
+
+	if err := row.Scan(&category, &amount, &createdAt, &spentAt, &user); err != nil {
+		return err, nil
+	}
+
+	expense := &entities.Expense{
+		ID:  id,
+		Category:  entities.Category(category),
+		Amount:    entities.Money(amount),
+		CreatedAt: createdAt,
+		SpentAt:   spentAt,
+		User:      entities.User(user),
+	}
+
+	return nil, expense
+}
+
 func GetExpenses(db *sql.DB) (error, []entities.Expense) {
 	expenses := []entities.Expense{}
 
 	rows, err := db.Query("select " +
-		"category, amount, created_at, spent_at, username " +
+		"id, category, amount, created_at, spent_at, username " +
 		"from expenses " +
 		"order by spent_at desc, id desc limit 1000")
 	defer rows.Close()
@@ -47,17 +78,19 @@ func GetExpenses(db *sql.DB) (error, []entities.Expense) {
 	}
 
 	for rows.Next() {
+		var id int
 		var category string
 		var amount float32
 		var createdAt time.Time
 		var spentAt time.Time
 		var user string
 
-		if err = rows.Scan(&category, &amount, &createdAt, &spentAt, &user); err != nil {
+		if err = rows.Scan(&id, &category, &amount, &createdAt, &spentAt, &user); err != nil {
 			return err, nil
 		}
 
 		expense := entities.Expense{
+			ID:  id,
 			Category:  entities.Category(category),
 			Amount:    entities.Money(amount),
 			CreatedAt: createdAt,
