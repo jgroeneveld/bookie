@@ -39,7 +39,7 @@ func GetExpense(db *sql.DB, id int) (error, *entities.Expense) {
 		"from expenses " +
 		"where id = $1 " +
 		"limit 1"
- 
+
 	row := db.QueryRow(query, id)
 
 	var category string
@@ -53,7 +53,7 @@ func GetExpense(db *sql.DB, id int) (error, *entities.Expense) {
 	}
 
 	expense := &entities.Expense{
-		ID:  id,
+		ID:        id,
 		Category:  entities.Category(category),
 		Amount:    entities.Money(amount),
 		CreatedAt: createdAt,
@@ -70,7 +70,7 @@ func GetExpenses(db *sql.DB) (error, []entities.Expense) {
 	rows, err := db.Query("select " +
 		"id, category, amount, created_at, spent_at, username " +
 		"from expenses " +
-		"order by spent_at desc, id desc limit 1000")
+		"order by spent_at desc, id desc limit 25")
 	defer rows.Close()
 
 	if err != nil {
@@ -90,7 +90,7 @@ func GetExpenses(db *sql.DB) (error, []entities.Expense) {
 		}
 
 		expense := entities.Expense{
-			ID:  id,
+			ID:        id,
 			Category:  entities.Category(category),
 			Amount:    entities.Money(amount),
 			CreatedAt: createdAt,
